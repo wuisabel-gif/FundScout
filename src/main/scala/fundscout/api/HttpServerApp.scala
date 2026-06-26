@@ -1,25 +1,29 @@
 package fundscout.api
 
 import com.sun.net.httpserver.{HttpExchange, HttpServer}
-import fundscout.SampleData
-import fundscout.ingest.Ingestor
+import fundscout.{FundScout, SampleData}
+import fundscout.ingest.{Http, Ingestor, RawFundingRecord}
 import fundscout.util.Json
 
 import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 import java.time.LocalDate
+import scala.io.Source
 
 /** Serves [[FundScoutApi]] over HTTP using the JDK's built-in
   * `com.sun.net.httpserver` — no external web framework required.
   *
-  * Run with `sbt "runMain fundscout.api.fundscoutServer"` (optionally pass a
-  * port as an argument).
-  * The routing logic lives in [[FundScoutApi]] and is unit-tested separately;
-  * this file is only the transport binding.
+  * Run with `sbt "runMain fundscout.api.fundscoutServer [port] [source]"`. The
+  * optional `source` is a CSV/JSON file path or URL to load instead of the
+  * built-in sample data, so the dashboard can explore any dataset. The routing
+  * logic lives in [[FundScoutApi]] and is unit-tested separately; this file is
+  * only the transport binding.
   */
 @main def fundscoutServer(args: String*): Unit =
   val port = args.headOption.flatMap(_.toIntOption).getOrElse(8080)
-  val registry = Ingestor.run(SampleData.records).registry
+  val source = args.drop(1).headOption
+  val records = source.map(loadRecords).getOrElse(SampleData.records)
+  val registry = Ingestor.run(records).registry
   val api = FundScoutApi(registry, LocalDate.now())
 
   val server = HttpServer.create(new InetSocketAddress(port), 0)
@@ -27,25 +31,61 @@ import java.time.LocalDate
   server.setExecutor(null)
   server.start()
 
-  println(s"FundScout API listening on http://localhost:$port")
-  println(s"Try: curl http://localhost:$port/market")
+  val origin = source.getOrElse("built-in sample data")
+  println(s"FundScout listening on http://localhost:$port  (data: $origin)")
+  println(s"Dashboard: http://localhost:$port/   ·   API: http://localhost:$port/market")
 
   // The HttpServer runs on background threads; block so the JVM stays alive
   // until the process is interrupted.
   new java.util.concurrent.CountDownLatch(1).await()
 
 private def respond(exchange: HttpExchange, api: FundScoutApi): Unit =
-  val response =
-    try api.handle(exchange.getRequestMethod, exchange.getRequestURI.getPath)
-    catch
-      case ex: Throwable =>
-        ApiResponse(
-          500,
-          Json.obj("error" -> Json.str(Option(ex.getMessage).getOrElse("internal error")))
-        )
-  val bytes = response.render.getBytes(StandardCharsets.UTF_8)
-  exchange.getResponseHeaders.set("Content-Type", "application/json")
-  exchange.sendResponseHeaders(response.status, bytes.length.toLong)
+  val method = exchange.getRequestMethod
+  val path = exchange.getRequestURI.getPath
+
+  // The browser dashboard is served at the root; everything else is the JSON API.
+  val (status, contentType, body) =
+    if method.equalsIgnoreCase("GET") && isDashboardPath(path) then
+      (200, "text/html; charset=utf-8", Dashboard.html)
+    else
+      val response =
+        try api.handle(method, path)
+        catch
+          case ex: Throwable =>
+            ApiResponse(
+              500,
+              Json.obj("error" -> Json.str(Option(ex.getMessage).getOrElse("internal error")))
+            )
+      (response.status, "application/json", response.render)
+
+  val bytes = body.getBytes(StandardCharsets.UTF_8)
+  exchange.getResponseHeaders.set("Content-Type", contentType)
+  exchange.sendResponseHeaders(status, bytes.length.toLong)
   val os = exchange.getResponseBody
   try os.write(bytes)
   finally os.close()
+
+private def isDashboardPath(path: String): Boolean =
+  path == "/" || path == "/index.html" || path == "/dashboard"
+
+/** Load records from a CSV/JSON file path or URL, falling back to the built-in
+  * sample data (with a warning) if the source can't be read or decoded.
+  */
+private def loadRecords(source: String): List[RawFundingRecord] =
+  try
+    val (contentType, text) =
+      if source.startsWith("http://") || source.startsWith("https://") then
+        Http.fetch(source) match
+          case Right(doc)  => (doc.contentType, doc.body)
+          case Left(error) => throw new RuntimeException(error)
+      else
+        val src = Source.fromFile(source)
+        try (None, src.mkString)
+        finally src.close()
+    val decoded = FundScout.decode(source, contentType, text)
+    decoded.errors.foreach(e => println(s"[warn] decode: ${e.describe}"))
+    decoded.records
+  catch
+    case ex: Throwable =>
+      println(s"[warn] could not load '$source' (${ex.getMessage}); using sample data")
+      SampleData.records

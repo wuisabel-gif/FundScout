@@ -1,0 +1,5 @@
+# Keep GitHub's language statistics focused on Scala.
+# Exclude HTML from Linguist language detection (the dashboard markup is a
+# presentation detail, not the substance of the project).
+*.html linguist-detectable=false
+*.html linguist-vendored
