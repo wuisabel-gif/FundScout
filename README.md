@@ -90,6 +90,36 @@ material is scraped from noisy, half-reliable public sources. Today those record
 come from CSV/JSON files or any HTTP(S) URL serving them; press and social-media
 monitoring are a natural next feed into the same pipeline.
 
+## What it's built to catch
+
+The same event-driven pipeline points at two outreach-grade signals — the moments
+a venture investor most wants to act on:
+
+**New founders, before the round.** When a researcher or operator leaves a top
+lab, university, or company to start something, that departure is itself a signal
+— often visible in public professional-network and press activity before any
+funding is announced. FundScout already models **founders as first-class data**
+(`Founder` + a reputation tier), so the architecture is built to ingest these
+departure/launch signals from public sources and surface emerging teams — *"this
+person just left to found a company"* — while they're still reachable, before
+every fund has them on a list. The goal is a ranked, explainable shortlist of
+**who to reach out to, and why**.
+
+**Companies that just raised.** Every new round is an event, and the platform is
+event-native: it can flag companies whose latest round is fresh (a brand-new
+Series A, say) so an investor can engage while the round — and the relationships
+— are current, rather than reading about it months later.
+
+The thesis is the same throughout: turn scattered public breadcrumbs into a
+timely, explainable list of *who* and *when*, not just a database of *what
+happened*.
+
+> **Honest scope.** Founder modeling and event-driven ingestion are implemented
+> today; the live datasets are loaded from files/URLs. Automated
+> professional-network and press feeds are roadmap, and would only be built
+> within each source's terms of service — FundScout is designed to *receive*
+> those signals, not to scrape against a platform's rules.
+
 ## Status
 
 The full pipeline is implemented and tested — raw input through analytics,
@@ -265,7 +295,11 @@ observable data.
 
 Next up:
 
-- **Web dashboard** — a browser UI over the JSON API.
+- **Emerging-founder discovery** — ingest public founder-departure and launch
+  signals so new teams surface for outreach *before* the round (see
+  [What it's built to catch](#what-its-built-to-catch)).
+- **Fresh-round alerts** — flag companies whose latest round is recent (a new
+  Series A, say) the moment it lands.
 - **Historical-replay datasets** under `data/`.
 
 Longer term: investor relationship graph, founder network visualization, sector
