@@ -64,6 +64,16 @@ the signals behind the prediction instead of hiding them inside a black box. The
 goal is not to tell someone what to believe; it is to make it easier to understand
 *why* a conclusion was reached.
 
+In practice that means outputs are **ranges with a confidence level**, not numbers
+with false precision. When a valuation is disclosed, the model anchors on it
+(`Confidence: High`); when it isn't, it estimates from comparable companies and
+observable signals and says so (`Confidence: Medium`, with the reasoning attached).
+And the ingest layer treats every announcement as an *untrusted* record to be
+validated rather than trusted on sight — exactly the shape you want when the raw
+material comes from noisy, half-reliable public sources. Today those records load
+from CSV/JSON files or any HTTP(S) URL; press and social-media monitoring are a
+natural next feed into the same pipeline.
+
 ## An engineering project disguised as a market platform
 
 FundScout is also an exploration of modern backend engineering. The venture
@@ -109,24 +119,6 @@ FundScout aims to answer questions such as:
 The platform doesn't just collect data — it learns from historical fundraising
 events and turns raw information into **explainable** insights, where every
 score, valuation, and prediction can say *why* it is what it is.
-
-## In practice
-
-Two design choices follow directly from how opaque this data is.
-
-Every output is a **range with a confidence level**, not a number with false
-precision. When a valuation is disclosed, the model anchors on it
-(`Confidence: High`). When it isn't, it estimates from comparable companies and
-observable signals and says so (`Confidence: Medium`, with the reasoning
-attached). The point isn't to replace the intuition that closes deals — it's to
-give that intuition a memory and a second opinion, and to make explicit the
-patterns a human tracks informally across hundreds of announcements.
-
-And the ingest layer treats every announcement as an *untrusted* record to be
-validated rather than trusted on sight — exactly the shape you want when the raw
-material is scraped from noisy, half-reliable public sources. Today those records
-come from CSV/JSON files or any HTTP(S) URL serving them; press and social-media
-monitoring are a natural next feed into the same pipeline.
 
 ## What it's built to catch
 
