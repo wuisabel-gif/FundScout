@@ -29,6 +29,12 @@ enum IngestError(val field: String):
   /** An investor tier string was present but unrecognized. */
   case UnknownInvestorTier(raw: String) extends IngestError("investor.tier")
 
+  /** A founder pedigree string was present but unrecognized. */
+  case UnknownFounderPedigree(raw: String) extends IngestError("founder.pedigree")
+
+  /** A risk-flag severity string was present but unrecognized. */
+  case UnknownRiskSeverity(raw: String) extends IngestError("riskFlag.severity")
+
   /** The lead investor id does not appear among the listed investors. */
   case LeadInvestorNotListed(id: String) extends IngestError("leadInvestorId")
 
@@ -41,5 +47,7 @@ enum IngestError(val field: String):
     case UnknownCurrency(raw)     => s"unknown currency: '$raw'"
     case InvalidDate(raw)         => s"date is not a valid yyyy-MM-dd date: '$raw'"
     case UnknownInvestorTier(raw) => s"unknown investor tier: '$raw'"
+    case UnknownFounderPedigree(raw) => s"unknown founder pedigree: '$raw'"
+    case UnknownRiskSeverity(raw) => s"unknown risk severity: '$raw'"
     case LeadInvestorNotListed(id) =>
       s"lead investor '$id' is not among the listed investors"

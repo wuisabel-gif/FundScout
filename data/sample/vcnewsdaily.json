@@ -1,0 +1,20 @@
+[
+  {"id": "sazabi-1", "companyId": "sazabi", "companyName": "Sazabi", "stage": "Seed", "amount": 8000000, "date": "2026-06-25", "sector": "AI", "country": "USA", "city": "San Francisco"},
+  {"id": "upside-1", "companyId": "upside", "companyName": "Upside", "stage": "Series A", "amount": 20000000, "date": "2026-06-25", "sector": "Healthtech", "country": "USA", "city": "Fort Lauderdale"},
+  {"id": "neurometric-1", "companyId": "neurometric", "companyName": "Neurometric AI", "stage": "Seed", "amount": 4000000, "date": "2026-06-25", "sector": "AI", "country": "USA", "city": "New York"},
+  {"id": "orthogonal-1", "companyId": "orthogonal", "companyName": "Orthogonal", "stage": "Seed", "amount": 4300000, "date": "2026-06-25", "sector": "Fintech", "country": "USA", "city": "San Francisco"},
+  {"id": "sailresearch-1", "companyId": "sailresearch", "companyName": "Sail Research", "stage": "Seed", "amount": 80000000, "date": "2026-06-25", "sector": "AI", "country": "USA", "city": "San Francisco"},
+  {"id": "redo-1", "companyId": "redo", "companyName": "Redo", "stage": "Series B", "amount": 81000000, "date": "2026-06-25", "sector": "Ecommerce", "country": "USA", "city": "Draper"},
+  {"id": "caplight-1", "companyId": "caplight", "companyName": "Caplight", "stage": "Series A", "amount": 16000000, "date": "2026-06-25", "sector": "Fintech", "country": "USA", "city": "San Francisco",
+   "investors": [{"id": "blackrock", "name": "BlackRock", "tier": "Tier1"}, {"id": "fin-capital", "name": "Fin Capital", "tier": "Tier2"}], "leadInvestorId": "blackrock"},
+  {"id": "coval-1", "companyId": "coval", "companyName": "Coval", "stage": "Series A", "amount": 28000000, "date": "2026-06-25", "sector": "AI", "country": "USA", "city": "San Francisco",
+   "investors": [{"id": "norwest", "name": "Norwest", "tier": "Tier1"}], "leadInvestorId": "norwest"},
+  {"id": "valence-1", "companyId": "valence", "companyName": "Valence AI", "stage": "Seed", "amount": 5000000, "date": "2026-06-24", "sector": "AI", "country": "USA", "city": "San Francisco"},
+  {"id": "attention-1", "companyId": "attention", "companyName": "Attention", "stage": "Series B", "amount": 30000000, "date": "2026-06-24", "sector": "AI", "country": "USA", "city": "New York",
+   "investors": [{"id": "rtp-global", "name": "RTP Global", "tier": "Tier1"}], "leadInvestorId": "rtp-global"},
+  {"id": "trovy-1", "companyId": "trovy", "companyName": "Trovy", "stage": "Series A", "amount": 15000000, "date": "2026-06-24", "sector": "Fintech", "country": "USA", "city": "New York",
+   "investors": [{"id": "left-lane", "name": "Left Lane Capital", "tier": "Tier1"}], "leadInvestorId": "left-lane"},
+  {"id": "taktile-1", "companyId": "taktile", "companyName": "Taktile", "stage": "Series C", "amount": 110000000, "date": "2026-06-24", "sector": "Fintech", "country": "USA", "city": "New York"},
+  {"id": "conniehealth-1", "companyId": "conniehealth", "companyName": "Connie Health", "stage": "Series B", "amount": 40000000, "date": "2026-06-23", "sector": "Healthtech", "country": "USA", "city": "Boston"},
+  {"id": "engram-1", "companyId": "engram", "companyName": "Engram", "stage": "Series B", "amount": 98000000, "date": "2026-06-23", "sector": "AI", "country": "USA", "city": "San Francisco"}
+]

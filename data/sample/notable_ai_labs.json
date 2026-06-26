@@ -7,7 +7,8 @@
       {"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"},
       {"id": "radical", "name": "Radical Ventures", "tier": "Tier2"}
     ],
-    "leadInvestorId": "a16z"
+    "leadInvestorId": "a16z",
+    "founders": [{"name": "Fei-Fei Li", "pedigree": "Luminary"}]
   },
   {
     "id": "wl-2", "companyId": "worldlabs", "companyName": "World Labs",
@@ -30,7 +31,8 @@
       {"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"},
       {"id": "lightspeed", "name": "Lightspeed", "tier": "Tier1"}
     ],
-    "leadInvestorId": "lightspeed"
+    "leadInvestorId": "lightspeed",
+    "founders": [{"name": "Arthur Mensch", "pedigree": "Notable"}]
   },
   {
     "id": "mi-2", "companyId": "mistral", "companyName": "Mistral AI",
@@ -52,7 +54,8 @@
       {"id": "nvidia", "name": "NVIDIA", "tier": "Tier1"},
       {"id": "radical", "name": "Radical Ventures", "tier": "Tier2"}
     ],
-    "leadInvestorId": "nvidia"
+    "leadInvestorId": "nvidia",
+    "founders": [{"name": "Aidan Gomez", "pedigree": "Notable"}]
   },
   {
     "id": "co-2", "companyId": "cohere", "companyName": "Cohere",

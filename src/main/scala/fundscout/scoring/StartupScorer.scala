@@ -33,6 +33,7 @@ object StartupScorer:
       growth(profile),
       momentum(profile, asOf),
       investorStrength(profile),
+      founderPedigree(profile),
       ecosystemStrength(profile, market),
       marketConfidence(profile, market),
       capitalEfficiency(profile),
@@ -122,6 +123,23 @@ object StartupScorer:
 
     build(ScoreComponent.InvestorStrength, List(leadSignal, depthSignal).flatten)
 
+  /** Reputation of the founding team — the "World Labs" signal. */
+  private def founderPedigree(profile: CompanyProfile): ComponentScore =
+    val signal: Signal = bestByPedigree(profile.founders) match
+      case Some(f) =>
+        f.pedigree match
+          case FounderPedigree.Luminary =>
+            (35, ScoreReason(Positive, s"Field-defining founder (${f.name})"))
+          case FounderPedigree.Notable =>
+            (20, ScoreReason(Positive, s"Renowned founder (${f.name})"))
+          case FounderPedigree.Standard =>
+            (5, ScoreReason(Neutral, s"Experienced founder (${f.name})"))
+          case FounderPedigree.Unknown =>
+            (0, ScoreReason(Neutral, "Founder reputation not assessed"))
+      case None =>
+        (0, ScoreReason(Neutral, "No founder information"))
+    build(ScoreComponent.FounderPedigree, List(signal))
+
   /** Strength of the company's sector and geography within the ecosystem. */
   private def ecosystemStrength(
       profile: CompanyProfile,
@@ -172,9 +190,16 @@ object StartupScorer:
           (5, ScoreReason(Positive, "Acquired"))
       }
 
+    // Negative news (risk flags) directly weighs on how the market sees the
+    // company — surfaced as explicit negative reasons, never hidden.
+    val riskSignals: List[Signal] = profile.riskFlags.map { f =>
+      val when = f.date.map(d => s" (${d.getYear})").getOrElse("")
+      (-f.severity.penalty, ScoreReason(Negative, s"${f.description}$when"))
+    }
+
     build(
       ScoreComponent.MarketConfidence,
-      List(roundSizeSignal, unicornSignal, exitSignal).flatten
+      List(roundSizeSignal, unicornSignal, exitSignal).flatten ++ riskSignals
     )
 
   /** Valuation achieved per dollar of capital raised. */
@@ -239,5 +264,8 @@ object StartupScorer:
 
   private def bestByTier(investors: Set[Investor]): Option[Investor] =
     if investors.isEmpty then None else Some(investors.maxBy(_.tier.weight))
+
+  private def bestByPedigree(founders: List[Founder]): Option[Founder] =
+    if founders.isEmpty then None else Some(founders.maxBy(_.pedigree.weight))
 
   private def clamp(v: Int): Int = math.max(0, math.min(100, v))

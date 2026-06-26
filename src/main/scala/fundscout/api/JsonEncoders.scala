@@ -28,6 +28,17 @@ object JsonEncoders:
     "tier" -> str(i.tier.toString)
   )
 
+  def founder(f: Founder): Json = obj(
+    "name" -> str(f.name),
+    "pedigree" -> str(f.pedigree.toString)
+  )
+
+  def riskFlag(f: RiskFlag): Json = obj(
+    "severity" -> str(f.severity.toString),
+    "description" -> str(f.description),
+    "date" -> opt(f.date.map(d => str(d.toString)))
+  )
+
   def event(e: FundingEvent): Json = obj(
     "id" -> str(e.id),
     "stage" -> str(e.stage.label),
@@ -49,7 +60,9 @@ object JsonEncoders:
     "rounds" -> num(p.roundCount),
     "totalCapitalRaised" -> money(p.totalCapitalRaised),
     "latestStage" -> opt(p.latestStage.map(s => str(s.label))),
-    "hasExited" -> bool(p.hasExited)
+    "hasExited" -> bool(p.hasExited),
+    "topRisk" -> opt(p.riskFlags.headOption.map(f => str(f.severity.toString))),
+    "riskCount" -> num(p.riskFlags.size)
   )
 
   /** A full company view, including event history. */
@@ -62,8 +75,10 @@ object JsonEncoders:
     "totalCapitalRaised" -> money(p.totalCapitalRaised),
     "latestStage" -> opt(p.latestStage.map(s => str(s.label))),
     "latestValuation" -> opt(p.latestValuation.map(money)),
+    "founders" -> arr(p.founders.map(founder)),
     "investors" -> arr(p.investors.toList.sortBy(_.name).map(investor)),
     "hasExited" -> bool(p.hasExited),
+    "riskFlags" -> arr(p.riskFlags.map(riskFlag)),
     "events" -> arr(p.events.map(event))
   )
 
@@ -87,6 +102,14 @@ object JsonEncoders:
       "fundingBySector" -> fundingMap(r.fundingBySector)(_.label),
       "fundingByCountry" -> fundingMap(r.fundingByCountry)(identity),
       "fundingByCity" -> fundingMap(r.fundingByCity)(identity),
+      "fundingByYear" -> arr(
+        r.fundingByYear.toList.sortBy(_._1).map((year, money) =>
+          obj("year" -> num(year), "funding" -> JsonEncoders.money(money)))
+      ),
+      "roundsByStage" -> arr(
+        r.roundsByStage.toList.sortBy(_._1).map((stage, count) =>
+          obj("stage" -> str(stage.label), "count" -> num(count)))
+      ),
       "topInvestors" -> arr(r.investorActivity.take(10).map(investorActivity)),
       "unicorns" -> arr(r.unicorns.map(unicorn))
     )

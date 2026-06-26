@@ -140,6 +140,7 @@ object ValuationEngine:
         (BigDecimal(1.05),
           s"Located in a major funding hub (${profile.headquarters.country})")
       ),
+      founderAdjustment(profile),
       momentumAdjustment(profile, asOf)
     ).flatten
 
@@ -195,6 +196,21 @@ object ValuationEngine:
       case FundingStage.SeriesB                      => BigDecimal(4)
       case FundingStage.SeriesCPlus                  => BigDecimal(3)
       case _                                         => BigDecimal(3)
+
+  /** A founder premium for companies built around a renowned researcher — the
+    * "World Labs effect" that comparable multiples alone miss.
+    */
+  private def founderAdjustment(
+      profile: CompanyProfile
+  ): Option[(BigDecimal, String)] =
+    profile.founders.maxByOption(_.pedigree.weight).flatMap { f =>
+      f.pedigree match
+        case FounderPedigree.Luminary =>
+          Some((BigDecimal(1.20), s"Field-defining founder (${f.name})"))
+        case FounderPedigree.Notable =>
+          Some((BigDecimal(1.10), s"Renowned founder (${f.name})"))
+        case _ => None
+    }
 
   private def momentumAdjustment(
       profile: CompanyProfile,

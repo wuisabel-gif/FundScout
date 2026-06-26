@@ -62,6 +62,30 @@ final case class CompanyProfile private (
   def leadInvestors: Set[Investor] =
     events.flatMap(_.leadInvestor).groupBy(_.id).values.map(_.head).toSet
 
+  /** Distinct founders across all events, keeping the highest pedigree seen for
+    * each name.
+    */
+  def founders: List[Founder] =
+    events
+      .flatMap(_.founders)
+      .groupBy(_.name)
+      .values
+      .map(_.maxBy(_.pedigree.weight))
+      .toList
+      .sortBy(_.name)
+
+  /** All risk flags across the company's events, most severe (then most recent)
+    * first. De-duplicated by description.
+    */
+  def riskFlags: List[RiskFlag] =
+    events
+      .flatMap(_.riskFlags)
+      .groupBy(_.description)
+      .values
+      .map(_.head)
+      .toList
+      .sortBy(f => (-f.severity.penalty, f.date.map(_.toEpochDay).map(-_).getOrElse(0L)))
+
   /** The most recently disclosed post-money valuation, if any. */
   def latestValuation: Option[Money] =
     events.reverse.collectFirst {

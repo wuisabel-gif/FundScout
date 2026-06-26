@@ -48,7 +48,9 @@ final case class FundingEvent(
     headquarters: Location,
     investors: List[Investor] = Nil,
     leadInvestor: Option[Investor] = None,
-    postMoneyValuation: Option[Money] = None
+    postMoneyValuation: Option[Money] = None,
+    founders: List[Founder] = Nil,
+    riskFlags: List[RiskFlag] = Nil
 ):
   require(id.trim.nonEmpty, "funding event id must not be blank")
   require(companyId.trim.nonEmpty, "funding event companyId must not be blank")

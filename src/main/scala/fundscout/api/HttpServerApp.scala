@@ -24,7 +24,11 @@ import scala.io.Source
   val source = args.drop(1).headOption
   val records = source.map(loadRecords).getOrElse(SampleData.records)
   val registry = Ingestor.run(records).registry
-  val api = FundScoutApi(registry, LocalDate.now())
+  // Evaluate as of the most recent event in the data, not wall-clock now, so
+  // recency-sensitive signals (confidence, momentum) are judged against the
+  // dataset's own timeline rather than drifting stale as real time passes.
+  val asOf = registry.allEvents.map(_.date).maxOption.getOrElse(LocalDate.now())
+  val api = FundScoutApi(registry, asOf)
 
   val server = HttpServer.create(new InetSocketAddress(port), 0)
   val _ = server.createContext("/", (exchange: HttpExchange) => respond(exchange, api))
@@ -32,7 +36,7 @@ import scala.io.Source
   server.start()
 
   val origin = source.getOrElse("built-in sample data")
-  println(s"FundScout listening on http://localhost:$port  (data: $origin)")
+  println(s"FundScout listening on http://localhost:$port  (data: $origin, as of $asOf)")
   println(s"Dashboard: http://localhost:$port/   ·   API: http://localhost:$port/market")
 
   // The HttpServer runs on background threads; block so the JVM stays alive

@@ -59,9 +59,11 @@ class StartupScorerSpec extends munit.FunSuite:
     assertEquals(value(ScoreComponent.MarketConfidence), 85)
     assertEquals(value(ScoreComponent.CapitalEfficiency), 80)
     assertEquals(value(ScoreComponent.ExpansionPotential), 65)
+    // Acme has no founder data, so the founder component stays neutral.
+    assertEquals(value(ScoreComponent.FounderPedigree), 50)
 
-    // Weighted average of the above lands at 82/100.
-    assertEquals(score.overall, 82)
+    // Weighted average of the components lands at 77/100.
+    assertEquals(score.overall, 77)
   }
 
   test("a strong company's reasons explain the score") {
@@ -118,6 +120,84 @@ class StartupScorerSpec extends munit.FunSuite:
     )
   }
 
+  test("a field-defining founder lifts the score, with an explaining reason") {
+    val withFounder = CompanyProfile
+      .fromEvents(
+        List(
+          event("w1", "worldlike", "WorldLike", FundingStage.Seed, 5_000_000,
+            LocalDate.of(2024, 1, 1), Sector.AI, "USA",
+            investors = List(sequoia), lead = Some(sequoia))
+            .copy(founders = List(Founder("Famous Professor", FounderPedigree.Luminary)))
+        )
+      )
+      .toOption
+      .get
+    val noFounder = CompanyProfile
+      .fromEvents(
+        List(
+          event("n1", "plain", "PlainCo", FundingStage.Seed, 5_000_000,
+            LocalDate.of(2024, 1, 1), Sector.AI, "USA",
+            investors = List(sequoia), lead = Some(sequoia))
+        )
+      )
+      .toOption
+      .get
+    val asOfRecent = LocalDate.of(2024, 6, 1)
+
+    val founderComp = StartupScorer.score(withFounder, market, asOfRecent)
+      .component(ScoreComponent.FounderPedigree).get
+    assertEquals(founderComp.value, 85) // 50 baseline + 35 for a luminary
+    assert(
+      founderComp.reasons.exists(_.description.contains("Field-defining founder")),
+      founderComp.reasons
+    )
+    assert(
+      StartupScorer.score(withFounder, market, asOfRecent).overall >
+        StartupScorer.score(noFounder, market, asOfRecent).overall
+    )
+  }
+
+  test("a critical risk flag lowers market confidence with a negative reason") {
+    val flagged = CompanyProfile
+      .fromEvents(
+        List(
+          event("r1", "risky", "RiskyCo", FundingStage.SeriesB, 50_000_000,
+            LocalDate.of(2024, 1, 1), Sector.AI, "USA",
+            investors = List(a16z), lead = Some(a16z),
+            postMoney = Some(1_200_000_000))
+            .copy(riskFlags = List(
+              RiskFlag(RiskSeverity.Critical, "Founders left for a competitor",
+                Some(LocalDate.of(2024, 8, 1)))))
+        )
+      )
+      .toOption
+      .get
+    val clean = CompanyProfile
+      .fromEvents(
+        List(
+          event("c1", "clean", "CleanCo", FundingStage.SeriesB, 50_000_000,
+            LocalDate.of(2024, 1, 1), Sector.AI, "USA",
+            investors = List(a16z), lead = Some(a16z),
+            postMoney = Some(1_200_000_000))
+        )
+      )
+      .toOption
+      .get
+    val asOfRecent = LocalDate.of(2024, 6, 1)
+
+    val flaggedMc = StartupScorer.score(flagged, market, asOfRecent)
+      .component(ScoreComponent.MarketConfidence).get
+    val cleanMc = StartupScorer.score(clean, market, asOfRecent)
+      .component(ScoreComponent.MarketConfidence).get
+
+    assert(flaggedMc.value < cleanMc.value, (flaggedMc.value, cleanMc.value))
+    assert(
+      flaggedMc.reasons.exists(r =>
+        r.polarity == Polarity.Negative && r.description.contains("Founders left")),
+      flaggedMc.reasons
+    )
+  }
+
   test("component weights sum to one") {
-    assertEquals(ScoreComponent.values.map(_.weight).sum, 1.0)
+    assert(math.abs(ScoreComponent.values.map(_.weight).sum - 1.0) < 1e-9)
   }

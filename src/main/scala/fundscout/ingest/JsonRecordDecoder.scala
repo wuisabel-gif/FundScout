@@ -49,9 +49,11 @@ object JsonRecordDecoder:
         if missing.nonEmpty then
           Left(DecodeError(s"record $idx", s"missing fields: ${missing.mkString(", ")}"))
         else
-          decodeInvestors(m.get("investors")) match
-            case Left(message) => Left(DecodeError(s"record $idx", message))
-            case Right(investors) =>
+          val inv = decodeInvestors(m.get("investors"))
+          val fnd = decodeFounders(m.get("founders"))
+          val rsk = decodeRiskFlags(m.get("riskFlags"))
+          (inv, fnd, rsk) match
+            case (Right(investors), Right(founders), Right(riskFlags)) =>
               Right(RawFundingRecord(
                 id = str(m, "id"),
                 companyId = str(m, "companyId"),
@@ -65,8 +67,14 @@ object JsonRecordDecoder:
                 currency = strOpt(m, "currency").getOrElse("USD"),
                 investors = investors,
                 leadInvestorId = strOpt(m, "leadInvestorId"),
-                postMoneyValuation = strOpt(m, "postMoneyValuation")
+                postMoneyValuation = strOpt(m, "postMoneyValuation"),
+                founders = founders,
+                riskFlags = riskFlags
               ))
+            case _ =>
+              val msg = List(inv.left.toOption, fnd.left.toOption, rsk.left.toOption)
+                .flatten.mkString("; ")
+              Left(DecodeError(s"record $idx", msg))
       case _ =>
         Left(DecodeError(s"record $idx", "expected a JSON object"))
 
@@ -88,6 +96,44 @@ object JsonRecordDecoder:
           case Some(message) => Left(message)
           case None          => Right(decoded.collect { case Right(investor) => investor })
       case Some(_) => Left("'investors' must be an array")
+
+  private def decodeFounders(value: Option[Json]): Either[String, List[RawFounder]] =
+    value match
+      case None | Some(JNull) => Right(Nil)
+      case Some(JArray(items)) =>
+        val decoded = items.map {
+          case JObject(fs) =>
+            val fm = fs.toMap
+            Right(RawFounder(
+              name = fm.get("name").flatMap(scalar).getOrElse(""),
+              pedigree = fm.get("pedigree").flatMap(scalar)
+            ))
+          case JString(name) => Right(RawFounder(name, None))
+          case _             => Left("each founder must be a JSON object or string")
+        }
+        decoded.collectFirst { case Left(message) => message } match
+          case Some(message) => Left(message)
+          case None          => Right(decoded.collect { case Right(founder) => founder })
+      case Some(_) => Left("'founders' must be an array")
+
+  private def decodeRiskFlags(value: Option[Json]): Either[String, List[RawRiskFlag]] =
+    value match
+      case None | Some(JNull) => Right(Nil)
+      case Some(JArray(items)) =>
+        val decoded = items.map {
+          case JObject(fs) =>
+            val rm = fs.toMap
+            Right(RawRiskFlag(
+              severity = rm.get("severity").flatMap(scalar).getOrElse(""),
+              description = rm.get("description").flatMap(scalar).getOrElse(""),
+              date = rm.get("date").flatMap(scalar)
+            ))
+          case _ => Left("each risk flag must be a JSON object")
+        }
+        decoded.collectFirst { case Left(message) => message } match
+          case Some(message) => Left(message)
+          case None          => Right(decoded.collect { case Right(flag) => flag })
+      case Some(_) => Left("'riskFlags' must be an array")
 
   /** A scalar JSON value rendered as a string, or `None` for null/containers. */
   private def scalar(json: Json): Option[String] = json match

@@ -1,0 +1,234 @@
+[
+  {
+    "id": "wl-1", "companyId": "worldlabs", "companyName": "World Labs",
+    "stage": "Seed", "amount": 100000000, "date": "2024-05-01",
+    "sector": "AI", "country": "USA", "city": "San Francisco",
+    "investors": [{"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"}],
+    "leadInvestorId": "a16z",
+    "founders": [{"name": "Fei-Fei Li", "pedigree": "Luminary"}]
+  },
+  {
+    "id": "wl-2", "companyId": "worldlabs", "companyName": "World Labs",
+    "stage": "Series A", "amount": 230000000, "date": "2024-09-01",
+    "sector": "AI", "country": "USA", "city": "San Francisco",
+    "investors": [
+      {"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"},
+      {"id": "nea", "name": "NEA", "tier": "Tier1"}
+    ],
+    "leadInvestorId": "a16z",
+    "postMoneyValuation": 1040000000
+  },
+
+  {
+    "id": "tm-1", "companyId": "thinkingmachines", "companyName": "Thinking Machines Lab",
+    "stage": "Seed", "amount": 2000000000, "date": "2025-07-01",
+    "sector": "AI", "country": "USA", "city": "San Francisco",
+    "investors": [
+      {"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"},
+      {"id": "nvidia", "name": "NVIDIA", "tier": "Tier1"}
+    ],
+    "leadInvestorId": "a16z",
+    "postMoneyValuation": 12000000000,
+    "founders": [{"name": "Mira Murati", "pedigree": "Notable"}]
+  },
+
+  {
+    "id": "mo-1", "companyId": "modular", "companyName": "Modular",
+    "stage": "Seed", "amount": 30000000, "date": "2022-06-01",
+    "sector": "AI", "country": "USA", "city": "Palo Alto",
+    "investors": [{"id": "gv", "name": "GV", "tier": "Tier1"}],
+    "leadInvestorId": "gv",
+    "founders": [{"name": "Chris Lattner", "pedigree": "Luminary"}]
+  },
+  {
+    "id": "mo-2", "companyId": "modular", "companyName": "Modular",
+    "stage": "Series A", "amount": 100000000, "date": "2023-08-01",
+    "sector": "AI", "country": "USA", "city": "Palo Alto",
+    "investors": [
+      {"id": "general-catalyst", "name": "General Catalyst", "tier": "Tier1"},
+      {"id": "gv", "name": "GV", "tier": "Tier1"}
+    ],
+    "leadInvestorId": "general-catalyst",
+    "postMoneyValuation": 600000000
+  },
+
+  {
+    "id": "px-1", "companyId": "perplexity", "companyName": "Perplexity AI",
+    "stage": "Series B", "amount": 74000000, "date": "2024-01-01",
+    "sector": "AI", "country": "USA", "city": "San Francisco",
+    "investors": [{"id": "nea", "name": "NEA", "tier": "Tier1"}],
+    "leadInvestorId": "nea",
+    "founders": [{"name": "Aravind Srinivas", "pedigree": "Notable"}],
+    "riskFlags": [
+      {"severity": "Watch", "description": "Faced publisher complaints over content scraping", "date": "2024-06-01"}
+    ]
+  },
+  {
+    "id": "px-2", "companyId": "perplexity", "companyName": "Perplexity AI",
+    "stage": "Series C", "amount": 250000000, "date": "2024-06-01",
+    "sector": "AI", "country": "USA", "city": "San Francisco",
+    "investors": [
+      {"id": "iconiq", "name": "IConiq Growth", "tier": "Tier1"},
+      {"id": "nea", "name": "NEA", "tier": "Tier1"}
+    ],
+    "leadInvestorId": "iconiq",
+    "postMoneyValuation": 3000000000
+  },
+
+  {
+    "id": "rw-1", "companyId": "runway", "companyName": "Runway",
+    "stage": "Series C", "amount": 141000000, "date": "2023-06-01",
+    "sector": "AI", "country": "USA", "city": "New York",
+    "investors": [
+      {"id": "general-catalyst", "name": "General Catalyst", "tier": "Tier1"},
+      {"id": "nvidia", "name": "NVIDIA", "tier": "Tier1"}
+    ],
+    "leadInvestorId": "general-catalyst",
+    "founders": [{"name": "Cristobal Valenzuela", "pedigree": "Notable"}]
+  },
+  {
+    "id": "rw-2", "companyId": "runway", "companyName": "Runway",
+    "stage": "Series C+", "amount": 300000000, "date": "2025-04-01",
+    "sector": "AI", "country": "USA", "city": "New York",
+    "investors": [{"id": "general-catalyst", "name": "General Catalyst", "tier": "Tier1"}],
+    "leadInvestorId": "general-catalyst",
+    "postMoneyValuation": 3000000000
+  },
+
+  {
+    "id": "lu-1", "companyId": "luma", "companyName": "Luma AI",
+    "stage": "Series B", "amount": 43000000, "date": "2024-01-01",
+    "sector": "AI", "country": "USA", "city": "San Francisco",
+    "investors": [{"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"}],
+    "leadInvestorId": "a16z",
+    "founders": [{"name": "Amit Jain", "pedigree": "Notable"}]
+  },
+
+  {
+    "id": "sk-1", "companyId": "skild", "companyName": "Skild AI",
+    "stage": "Series A", "amount": 300000000, "date": "2024-07-01",
+    "sector": "Robotics", "country": "USA", "city": "Pittsburgh",
+    "investors": [
+      {"id": "lightspeed", "name": "Lightspeed", "tier": "Tier1"},
+      {"id": "coatue", "name": "Coatue", "tier": "Tier1"}
+    ],
+    "leadInvestorId": "lightspeed",
+    "postMoneyValuation": 1500000000,
+    "founders": [{"name": "Deepak Pathak", "pedigree": "Notable"}]
+  },
+
+  {
+    "id": "cv-1", "companyId": "covariant", "companyName": "Covariant",
+    "stage": "Series B", "amount": 80000000, "date": "2021-07-01",
+    "sector": "Robotics", "country": "USA", "city": "Emeryville",
+    "investors": [{"id": "index", "name": "Index Ventures", "tier": "Tier1"}],
+    "leadInvestorId": "index",
+    "founders": [{"name": "Pieter Abbeel", "pedigree": "Notable"}],
+    "riskFlags": [
+      {"severity": "Critical", "description": "Amazon hired the founders and roughly a quarter of staff", "date": "2024-08-01"}
+    ]
+  },
+  {
+    "id": "cv-2", "companyId": "covariant", "companyName": "Covariant",
+    "stage": "Series C", "amount": 75000000, "date": "2023-04-01",
+    "sector": "Robotics", "country": "USA", "city": "Emeryville",
+    "investors": [
+      {"id": "index", "name": "Index Ventures", "tier": "Tier1"},
+      {"id": "radical", "name": "Radical Ventures", "tier": "Tier2"}
+    ],
+    "leadInvestorId": "index"
+  },
+
+  {
+    "id": "in-1", "companyId": "insitro", "companyName": "Insitro",
+    "stage": "Series B", "amount": 143000000, "date": "2020-05-01",
+    "sector": "Biotech", "country": "USA", "city": "South San Francisco",
+    "investors": [{"id": "arch", "name": "ARCH Venture Partners", "tier": "Tier1"}],
+    "leadInvestorId": "arch",
+    "founders": [{"name": "Daphne Koller", "pedigree": "Luminary"}]
+  },
+  {
+    "id": "in-2", "companyId": "insitro", "companyName": "Insitro",
+    "stage": "Series C", "amount": 400000000, "date": "2021-03-01",
+    "sector": "Biotech", "country": "USA", "city": "South San Francisco",
+    "investors": [
+      {"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"},
+      {"id": "arch", "name": "ARCH Venture Partners", "tier": "Tier1"}
+    ],
+    "leadInvestorId": "a16z",
+    "postMoneyValuation": 2400000000
+  },
+
+  {
+    "id": "iso-1", "companyId": "isomorphic", "companyName": "Isomorphic Labs",
+    "stage": "Series A", "amount": 600000000, "date": "2024-04-01",
+    "sector": "Biotech", "country": "UK", "city": "London",
+    "investors": [
+      {"id": "thrive", "name": "Thrive Capital", "tier": "Tier1"},
+      {"id": "gv", "name": "GV", "tier": "Tier1"}
+    ],
+    "leadInvestorId": "thrive",
+    "founders": [{"name": "Demis Hassabis", "pedigree": "Luminary"}]
+  },
+
+  {
+    "id": "rx-1", "companyId": "recursion", "companyName": "Recursion Pharmaceuticals",
+    "stage": "Series C+", "amount": 239000000, "date": "2020-09-01",
+    "sector": "Biotech", "country": "USA", "city": "Salt Lake City",
+    "investors": [{"id": "arch", "name": "ARCH Venture Partners", "tier": "Tier1"}],
+    "leadInvestorId": "arch",
+    "founders": [{"name": "Chris Gibson", "pedigree": "Notable"}],
+    "riskFlags": [
+      {"severity": "Watch", "description": "Shares fell well below the 2021 IPO price", "date": "2024-01-01"}
+    ]
+  },
+  {
+    "id": "rx-2", "companyId": "recursion", "companyName": "Recursion Pharmaceuticals",
+    "stage": "IPO", "amount": 436000000, "date": "2021-04-01",
+    "sector": "Biotech", "country": "USA", "city": "Salt Lake City",
+    "investors": [],
+    "postMoneyValuation": 2900000000
+  },
+
+  {
+    "id": "db-1", "companyId": "databricks", "companyName": "Databricks",
+    "stage": "Series C+", "amount": 500000000, "date": "2023-09-01",
+    "sector": "SaaS", "country": "USA", "city": "San Francisco",
+    "investors": [
+      {"id": "general-catalyst", "name": "General Catalyst", "tier": "Tier1"},
+      {"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"}
+    ],
+    "leadInvestorId": "general-catalyst",
+    "postMoneyValuation": 43000000000,
+    "founders": [{"name": "Matei Zaharia", "pedigree": "Luminary"}]
+  },
+
+  {
+    "id": "an-1", "companyId": "anyscale", "companyName": "Anyscale",
+    "stage": "Series C", "amount": 99000000, "date": "2021-12-01",
+    "sector": "SaaS", "country": "USA", "city": "San Francisco",
+    "investors": [{"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"}],
+    "leadInvestorId": "a16z",
+    "postMoneyValuation": 1000000000,
+    "founders": [{"name": "Ion Stoica", "pedigree": "Luminary"}]
+  },
+
+  {
+    "id": "pc-1", "companyId": "pinecone", "companyName": "Pinecone",
+    "stage": "Series B", "amount": 100000000, "date": "2023-04-01",
+    "sector": "SaaS", "country": "USA", "city": "New York",
+    "investors": [{"id": "a16z", "name": "Andreessen Horowitz", "tier": "Tier1"}],
+    "leadInvestorId": "a16z",
+    "postMoneyValuation": 750000000,
+    "founders": [{"name": "Edo Liberty", "pedigree": "Notable"}]
+  },
+
+  {
+    "id": "ox-1", "companyId": "oxide", "companyName": "Oxide Computer",
+    "stage": "Series A", "amount": 44000000, "date": "2022-10-01",
+    "sector": "Hardware", "country": "USA", "city": "Emeryville",
+    "investors": [{"id": "eclipse", "name": "Eclipse Ventures", "tier": "Tier2"}],
+    "leadInvestorId": "eclipse",
+    "founders": [{"name": "Bryan Cantrill", "pedigree": "Luminary"}]
+  }
+]

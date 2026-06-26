@@ -73,7 +73,9 @@ object CsvRecordDecoder:
         currency = optCol("currency").getOrElse("USD"),
         investors = parseInvestors(col("investors")),
         leadInvestorId = optCol("leadInvestorId"),
-        postMoneyValuation = optCol("postMoneyValuation")
+        postMoneyValuation = optCol("postMoneyValuation"),
+        founders = parseFounders(col("founders")),
+        riskFlags = parseRiskFlags(col("riskFlags"))
       ))
 
   private def parseInvestors(cell: String): List[RawInvestor] =
@@ -90,5 +92,39 @@ object CsvRecordDecoder:
             id = parts.lift(0).getOrElse(""),
             name = parts.lift(1).getOrElse(""),
             tier = parts.lift(2).filter(_.nonEmpty)
+          )
+        }
+
+  /** Founders cell: `;`-separated `name:pedigree` entries (pedigree optional). */
+  private def parseFounders(cell: String): List[RawFounder] =
+    if cell.trim.isEmpty then Nil
+    else
+      cell
+        .split(';')
+        .toList
+        .map(_.trim)
+        .filter(_.nonEmpty)
+        .map { entry =>
+          val parts = entry.split(':').map(_.trim)
+          RawFounder(
+            name = parts.lift(0).getOrElse(""),
+            pedigree = parts.lift(1).filter(_.nonEmpty)
+          )
+        }
+
+  /** Risk-flags cell: `;`-separated `severity:description` entries. */
+  private def parseRiskFlags(cell: String): List[RawRiskFlag] =
+    if cell.trim.isEmpty then Nil
+    else
+      cell
+        .split(';')
+        .toList
+        .map(_.trim)
+        .filter(_.nonEmpty)
+        .map { entry =>
+          val parts = entry.split(':')
+          RawRiskFlag(
+            severity = parts.lift(0).map(_.trim).getOrElse(""),
+            description = parts.drop(1).mkString(":").trim
           )
         }

@@ -98,6 +98,31 @@ class PredictionEngineSpec extends munit.FunSuite:
     )
   }
 
+  test("a critical risk flag raises failure odds and lowers next-round likelihood") {
+    def co(flags: List[fundscout.model.RiskFlag]) = CompanyProfile
+      .fromEvents(List(
+        event("e1", "x", "X", FundingStage.SeriesA, 20_000_000,
+          LocalDate.of(2024, 1, 1), investors = List(sequoia), lead = Some(sequoia))
+          .copy(riskFlags = flags)))
+      .toOption.get
+    val asOfRecent = LocalDate.of(2024, 6, 1)
+    val flag = fundscout.model.RiskFlag(
+      fundscout.model.RiskSeverity.Critical, "Key team departed", Some(LocalDate.of(2024, 5, 1)))
+
+    val flagged = PredictionEngine.forecast(co(List(flag)), marketOf(Nil), asOfRecent)
+    val clean = PredictionEngine.forecast(co(Nil), marketOf(Nil), asOfRecent)
+
+    assert(
+      flagged.outcome(Outcome.Inactivity).get.probability.value >
+        clean.outcome(Outcome.Inactivity).get.probability.value
+    )
+    assert(flagged.nextRound.probability.value < clean.nextRound.probability.value)
+    assert(
+      flagged.nextRound.reasons.exists(_.contains("Key team departed")),
+      flagged.nextRound.reasons
+    )
+  }
+
   test("probabilities never escape [0,1]") {
     assertEquals(Probability.clamp(1.7), Probability.One)
     assertEquals(Probability.clamp(-0.3), Probability.Zero)

@@ -34,12 +34,14 @@ object FundingEventParser:
     val vCurrency    = parseCurrency(r.currency)
     val vDate        = parseDate(r.date)
     val vInvestors   = parseInvestors(r.investors)
+    val vFounders    = parseFounders(r.founders)
+    val vRiskFlags   = parseRiskFlags(r.riskFlags)
     val vValuation   = parseValuation(r.postMoneyValuation)
     val vLead        = validateLead(r.leadInvestorId, r.investors.map(_.id.trim).toSet)
 
     val errors = List[Validated[?]](
       vId, vCompanyId, vCompanyName, vCountry, vStage, vAmount, vCurrency,
-      vDate, vInvestors, vValuation, vLead
+      vDate, vInvestors, vFounders, vRiskFlags, vValuation, vLead
     ).flatMap(leftErrors)
 
     if errors.nonEmpty then Left(errors)
@@ -60,7 +62,9 @@ object FundingEventParser:
             Location(vCountry.toOption.get, r.city.map(_.trim).filter(_.nonEmpty)),
           investors = investors,
           leadInvestor = leadId.flatMap(id => investors.find(_.id == id)),
-          postMoneyValuation = vValuation.toOption.get.map(Money(_, currency))
+          postMoneyValuation = vValuation.toOption.get.map(Money(_, currency)),
+          founders = vFounders.toOption.get,
+          riskFlags = vRiskFlags.toOption.get
         )
       )
 
@@ -135,6 +139,49 @@ object FundingEventParser:
     val errors = idErr ++ nameErr ++ tierErr
     if errors.nonEmpty then Left(errors)
     else Right(Investor(ri.id.trim, ri.name.trim, tier.get))
+
+  private def parseFounders(raws: List[RawFounder]): Validated[List[Founder]] =
+    val parsed = raws.map(parseFounder)
+    val errors = parsed.flatMap(leftErrors)
+    if errors.nonEmpty then Left(errors)
+    else Right(parsed.flatMap(_.toOption))
+
+  private def parseFounder(rf: RawFounder): Validated[Founder] =
+    val nameErr =
+      if rf.name.trim.isEmpty then List(IngestError.MissingField("founder.name"))
+      else Nil
+    val pedigree = FounderPedigree.fromLabel(rf.pedigree.getOrElse(""))
+    val pedigreeErr =
+      if pedigree.isEmpty then
+        List(IngestError.UnknownFounderPedigree(rf.pedigree.getOrElse("")))
+      else Nil
+    val errors = nameErr ++ pedigreeErr
+    if errors.nonEmpty then Left(errors)
+    else Right(Founder(rf.name.trim, pedigree.get))
+
+  private def parseRiskFlags(raws: List[RawRiskFlag]): Validated[List[RiskFlag]] =
+    val parsed = raws.map(parseRiskFlag)
+    val errors = parsed.flatMap(leftErrors)
+    if errors.nonEmpty then Left(errors)
+    else Right(parsed.flatMap(_.toOption))
+
+  private def parseRiskFlag(rf: RawRiskFlag): Validated[RiskFlag] =
+    val severity = RiskSeverity.fromLabel(rf.severity)
+    val severityErr =
+      if severity.isEmpty then List(IngestError.UnknownRiskSeverity(rf.severity)) else Nil
+    val descErr =
+      if rf.description.trim.isEmpty then List(IngestError.MissingField("riskFlag.description"))
+      else Nil
+    val dateResult: Either[List[IngestError], Option[LocalDate]] =
+      rf.date.map(_.trim).filter(_.nonEmpty) match
+        case None => Right(None)
+        case Some(d) =>
+          Try(LocalDate.parse(d)).toEither.left
+            .map(_ => List(IngestError.InvalidDate(d)))
+            .map(Some(_))
+    val errors = severityErr ++ descErr ++ leftErrors(dateResult)
+    if errors.nonEmpty then Left(errors)
+    else Right(RiskFlag(severity.get, rf.description.trim, dateResult.toOption.get))
 
   private def validateLead(
       leadId: Option[String],

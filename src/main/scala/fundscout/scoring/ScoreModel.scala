@@ -8,12 +8,13 @@ package fundscout.scoring
   * makes the blend transparent and easy to tune.
   */
 enum ScoreComponent(val label: String, val weight: Double):
-  case GrowthScore        extends ScoreComponent("Growth", 0.15)
-  case FundingMomentum    extends ScoreComponent("Funding Momentum", 0.20)
-  case InvestorStrength   extends ScoreComponent("Investor Strength", 0.20)
-  case EcosystemStrength  extends ScoreComponent("Ecosystem Strength", 0.15)
+  case GrowthScore        extends ScoreComponent("Growth", 0.12)
+  case FundingMomentum    extends ScoreComponent("Funding Momentum", 0.16)
+  case InvestorStrength   extends ScoreComponent("Investor Strength", 0.16)
+  case FounderPedigree    extends ScoreComponent("Founder Pedigree", 0.15)
+  case EcosystemStrength  extends ScoreComponent("Ecosystem Strength", 0.12)
   case MarketConfidence   extends ScoreComponent("Market Confidence", 0.10)
-  case CapitalEfficiency  extends ScoreComponent("Capital Efficiency", 0.10)
+  case CapitalEfficiency  extends ScoreComponent("Capital Efficiency", 0.09)
   case ExpansionPotential extends ScoreComponent("Expansion Potential", 0.10)
 
 /** Whether a reason pushed a score up, down, or is purely informational. */

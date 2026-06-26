@@ -71,6 +71,16 @@ object PredictionEngine:
     if profile.investors.exists(_.tier == InvestorTier.Tier1) then
       signal(0.10, "Well-backed by a tier-1 investor")
 
+    if profile.founders.exists(_.pedigree.weight >= FounderPedigree.Notable.weight) then
+      signal(0.05, "Built around a renowned founder")
+
+    profile.riskFlags.foreach { f =>
+      f.severity match
+        case RiskSeverity.Critical => signal(-0.25, f.description)
+        case RiskSeverity.Serious  => signal(-0.12, f.description)
+        case RiskSeverity.Watch    => ()
+    }
+
     profile.daysSinceLastFunding(asOf).foreach { days =>
       if days <= 365 then signal(0.05, "Recently active")
       else if days > 1095 then
@@ -125,6 +135,14 @@ object PredictionEngine:
           signal(0.10, s"Operates in a hot sector (${profile.sector.label})")
         if profile.investors.exists(_.tier == InvestorTier.Tier1) then
           signal(0.10, "Backed by a tier-1 investor")
+        profile.founders.maxByOption(_.pedigree.weight).foreach { f =>
+          f.pedigree match
+            case FounderPedigree.Luminary =>
+              signal(0.15, s"Field-defining founder (${f.name})")
+            case FounderPedigree.Notable =>
+              signal(0.08, s"Renowned founder (${f.name})")
+            case _ => ()
+        }
 
         val deltas = signals.result()
         OutcomeForecast(
@@ -197,11 +215,24 @@ object PredictionEngine:
 
       val weakBacking = !profile.investors.exists(_.tier == InvestorTier.Tier1)
       val penalty = if weakBacking then 0.10 else 0.0
-      val reasons =
+      val backingReasons =
         if weakBacking then List(recencyReason, "No tier-1 investor backing")
         else List(recencyReason)
 
-      OutcomeForecast(Outcome.Inactivity, Probability.clamp(base + penalty), reasons)
+      // Alarming developments raise the odds the company stalls or fails.
+      val riskBump = profile.riskFlags.map { f =>
+        f.severity match
+          case RiskSeverity.Critical => 0.25
+          case RiskSeverity.Serious  => 0.15
+          case RiskSeverity.Watch    => 0.05
+      }.sum
+      val reasons = backingReasons ++ profile.riskFlags.map(_.description)
+
+      OutcomeForecast(
+        Outcome.Inactivity,
+        Probability.clamp(base + penalty + riskBump),
+        reasons
+      )
 
   // --- Helpers --------------------------------------------------------------
 

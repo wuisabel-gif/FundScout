@@ -24,7 +24,16 @@ final case class RawFundingRecord(
     currency: String = "USD",
     investors: List[RawInvestor] = Nil,
     leadInvestorId: Option[String] = None,
-    postMoneyValuation: Option[String] = None
+    postMoneyValuation: Option[String] = None,
+    founders: List[RawFounder] = Nil,
+    riskFlags: List[RawRiskFlag] = Nil
+)
+
+/** An untrusted risk-flag reference within a [[RawFundingRecord]]. */
+final case class RawRiskFlag(
+    severity: String,
+    description: String,
+    date: Option[String] = None
 )
 
 /** An untrusted investor reference within a [[RawFundingRecord]]. */
@@ -32,4 +41,10 @@ final case class RawInvestor(
     id: String,
     name: String,
     tier: Option[String] = None
+)
+
+/** An untrusted founder reference within a [[RawFundingRecord]]. */
+final case class RawFounder(
+    name: String,
+    pedigree: Option[String] = None
 )
