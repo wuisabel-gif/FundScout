@@ -2,58 +2,96 @@
 
 **A Scala platform for understanding how startups are built, funded, and valued.**
 
-The public markets have a price for everything. Every second, millions of trades
-establish a consensus about what a company is worth. Analysts can download decades
-of historical prices, earnings, and filings with a few API calls.
+The public markets have an extraordinary property: they remember everything.
 
-The startup ecosystem works differently.
+Every trade contributes to a continuously updated estimate of what a company is
+worth. Financial statements are standardized. Historical prices stretch back
+decades. Analysts can reconstruct nearly every important moment in a public
+company's life with a few API calls.
 
-Most of the world's most valuable companies spent years as private businesses,
-growing largely out of public view. During that time there is no stock ticker, no
-continuously updated market price, and often no reliable estimate of what the
-company is worth. Instead, information emerges gradually through funding
-announcements, investor interviews, press releases, regulatory filings, founder
-posts, and industry reporting. Each announcement reveals a small piece of a much
-larger story.
+Private markets don't work that way.
 
-Viewed individually, these events are little more than news.
+Most of the world's defining technology companies — Stripe, Databricks, OpenAI,
+SpaceX, Anthropic, Airbnb — spent years growing behind closed doors. Their stories
+unfolded not through stock prices, but through scattered signals: a funding
+announcement, a regulatory filing, a founder interview, an investor blog post, a
+hiring surge, a press release.
 
-Viewed together over years, they describe how industries emerge, how investors
-recognize opportunities, how founders build enduring companies, and how capital
-flows through innovation.
+Each event says very little on its own.
 
-FundScout is built around a simple idea: startup funding announcements are not
-isolated events — they are signals. If those signals are collected, validated, and
-connected over time, they begin to reveal patterns that are difficult to see by
-reading individual articles or spreadsheets.
+Together, they describe how innovation happens. They reveal which sectors are
+accelerating, which investors repeatedly recognize important ideas before everyone
+else, how capital moves through emerging technologies, and how companies evolve
+from ambitious startups into global businesses.
 
-The platform continuously transforms fundraising events into evolving company
-profiles, sector trends, investor networks, valuation estimates, and probabilistic
-forecasts. Every prediction is accompanied by an explanation of the evidence that
-produced it. The goal is not to replace human judgment, but to augment it with
-transparent analytics that scale across thousands of companies and millions of
-events.
+FundScout is built around a simple observation:
 
-At its core, FundScout is an exploration of a broader engineering question:
+> Startup funding is not just news. It is structured data describing how
+> innovation propagates through the economy.
 
-> Can we build an explainable intelligence system for private markets using only
-> observable public signals?
+Every funding round is an event. Every investor relationship becomes a connection.
+Every valuation is another observation about a company's trajectory. Over time,
+millions of these observations begin to form a living map of the private technology
+ecosystem.
 
-The answer is unlikely to be perfect — and it doesn't need to be. Venture investing
-has always combined quantitative evidence with qualitative intuition. FundScout
-simply attempts to make more of the quantitative side explicit, reproducible, and
-searchable.
+Instead of asking "What happened today?", FundScout asks a different question:
 
-Technically, FundScout is also a vehicle for exploring modern Scala. The project
-emphasizes immutable domain models, event-driven architecture, functional
-programming, concurrent stream processing, and explainable statistical modeling.
-Rather than using finance as an end goal, it uses the venture ecosystem as a
-realistic domain for building scalable backend software.
+> What story is the market telling when thousands of funding events are viewed
+> together?
 
-FundScout is not a trading platform, an investment advisor, or a source of
-financial advice. It is an educational software engineering project that explores
-how structured business events can be transformed into transparent analytics for
-one of the most opaque markets in the world. See [Non-goals](#non-goals).
+The platform continuously transforms public fundraising announcements into evolving
+company profiles, investor networks, market analytics, valuation estimates, and
+probabilistic forecasts. Every conclusion is accompanied by the evidence that
+produced it — the analytics are a reasoning system whose assumptions stay visible,
+not an oracle.
+
+The objective is not to predict the future with certainty. It is to make the
+private market more explainable.
+
+## Explainability over prediction
+
+Most venture investing still relies on fragmented information and intuition.
+Experienced investors develop an internal model after reading thousands of
+announcements, meeting founders, and watching industries mature over decades — and
+those mental models are valuable precisely because they connect events across time.
+
+FundScout attempts to build a computational version of that process. Instead of
+replacing judgment, it augments it.
+
+Every score is decomposed into the factors that produced it. Every valuation
+includes both a confidence level and supporting evidence. Every forecast exposes
+the signals behind the prediction instead of hiding them inside a black box. The
+goal is not to tell someone what to believe; it is to make it easier to understand
+*why* a conclusion was reached.
+
+## An engineering project disguised as a market platform
+
+FundScout is also an exploration of modern backend engineering. The venture
+ecosystem is an unusually rich domain for studying immutable data models,
+event-driven architecture, explainable statistical systems, functional programming,
+concurrent processing, and strongly typed APIs.
+
+Every funding announcement becomes an immutable event. Every company profile is
+derived rather than manually maintained. Every analytical model is deterministic,
+reproducible, and independently testable.
+
+The result is software whose architecture mirrors the evolution of the market
+itself: a continuous stream of observable events gradually building a more complete
+picture over time.
+
+## Why FundScout exists
+
+There is no Bloomberg Terminal for private companies. The data exists. The events
+are public. The relationships are observable. The challenge is connecting millions
+of small pieces into something coherent.
+
+FundScout explores whether transparent software can make one of the world's most
+opaque markets a little easier to understand.
+
+It is not an investment platform, a trading system, or a source of financial
+advice. It is an educational software engineering project exploring how public
+business events can be transformed into explainable intelligence. See
+[Non-goals](#non-goals).
 
 ## Vision
 
