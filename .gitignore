@@ -1,0 +1,20 @@
+# sbt / Scala
+target/
+project/target/
+project/project/
+.bsp/
+.bloop/
+.metals/
+.scala-build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+
+# Generated data
+data/generated/*
+!data/generated/.gitkeep

@@ -1,0 +1,5 @@
+id,companyId,companyName,stage,amount,date,sector,country,city,currency,investors,leadInvestorId,postMoneyValuation
+nimbus-1,nimbus,Nimbus,Seed,1500000,2022-03-01,AI,USA,San Francisco,USD,yc:Y Combinator:Tier2,yc,
+nimbus-2,nimbus,Nimbus,Series A,14000000,2023-08-01,AI,USA,San Francisco,USD,sequoia:Sequoia:Tier1;yc:Y Combinator:Tier2,sequoia,70000000
+orbit-1,orbit,Orbit,Seed,800000,2022-06-15,Fintech,UK,London,USD,angel:Jane Doe,,
+orbit-2,orbit,Orbit,Series A,9000000,2024-01-10,Fintech,UK,London,USD,a16z:Andreessen Horowitz:Tier1,a16z,45000000
